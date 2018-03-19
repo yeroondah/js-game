@@ -237,41 +237,31 @@ class LevelParser{
 	}
 	
 	createGrid(strings){
-		const array = [];
-		let i = 0;
-		
-		for(const string of strings){
-			array[i] = [];
-			for(let j = 0; j < string.length; j++){
-				const symbol = string.charAt(j);
-				if(symbol === 'o' || symbol === 'x' || symbol === '!'){
-					array[i].push(this.obstacleFromSymbol(symbol));
-				}else{
-					array[i].push(undefined);
-				}
-			}
-			
-			i++;
-		}
-		
+        let self =this;
+		let array = strings.map((string) => {
+			return string.split("").map((symbol) => {
+				return self.obstacleFromSymbol(symbol);
+			})
+		});
+
 		return array;
 	}
 	
 	createActors(strings){
 		const array = [];
-		let j = 0;
+		let index = 0;
 		
-		for(let k = 0; k < strings.length; k++ ){
-			const string = strings[k];
-			for(let i = 0; i < string.length; i++){
-				const symbol = string.charAt(i);
+		for(let i = 0; i < strings.length; i++ ){
+			const string = strings[i];
+			for(let position = 0; position < string.length; position++){
+				const symbol = string.charAt(position);
 				const actorCtr = this.actorFromSymbol(symbol);
 				if(typeof actorCtr === 'function'){
 					const actor = new actorCtr();
 					if(actor instanceof Actor){
-						array[j] = new actorCtr();
-						array[j].pos = new Vector(i,k);
-						j++;
+						array[index] = new actorCtr();
+						array[index].pos = new Vector(position,i);
+						index++;
 					}
 				}
 			}
