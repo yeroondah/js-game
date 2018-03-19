@@ -237,7 +237,7 @@ class LevelParser{
 	}
 	
 	createGrid(strings){
-        let self =this;
+        let self = this;
 		let array = strings.map((string) => {
 			return string.split("").map((symbol) => {
 				return self.obstacleFromSymbol(symbol);
