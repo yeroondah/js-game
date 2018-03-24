@@ -201,10 +201,6 @@ class Level{
 	}
 }
 
-const symbols = {
-	'x': 'wall',
-	'!': 'lava'
-};
 
 class LevelParser{
 	constructor(dictionary){
@@ -391,6 +387,11 @@ const schemas = [
 		'   x   xx   x'
 	]
 ];
+
+const symbols = {
+	'x': 'wall',
+	'!': 'lava'
+};
 
 const actorDict = {
   '@': Player,
