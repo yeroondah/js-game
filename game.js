@@ -97,33 +97,27 @@ class Actor{
 }
 
 class Level{
-	constructor(grid=[], actors=[]){
-		for(const actor of actors){
-			if(actor.type === 'player'){
-				this.player = actor;
-				break;
-			}
-		}
-	
+
+	constructor(grid=[], actors=[]) {
 		this.grid = grid;
 		this.actors = actors;
-		this.height = grid.length;
-		this.width = 0;
-		
-		if(grid.length !== 0){
-			for(const arr of this.grid){
-				if(typeof arr != 'undefined'){
-					if(this.width < arr.length){
-						this.width = arr.length;
-					}
-				}
-			}
-		}
-		
+		this.player = this.actors.find(actor => actor.type === 'player');
 		this.status = null;
 		this.finishDelay = 1;
 	}
+
 	
+	get height() {
+		return this.grid.length;
+	}
+
+	
+	get width() {
+		return this.grid.reduce(function(prev, arr) {
+			return arr.length > prev ? arr.length : prev;
+		}, 0);
+	}
+
 	isFinished(){
 		return(this.status != null && this.finishDelay < 0);
 	}
@@ -186,14 +180,7 @@ class Level{
 	}
 	
 	noMoreActors(type){
-		if(this.actors){
-			for(const actor of this.actors){
-				if(actor.type === type){
-					return false;
-				}
-			}
-		}
-		return true;
+		return this.actors.findIndex((elem) => elem.type === type) === -1;
 	}
 	
 	playerTouched(type, actor){
@@ -214,6 +201,11 @@ class Level{
 	}
 }
 
+const symbols = {
+	'x': 'wall',
+	'!': 'lava'
+};
+
 class LevelParser{
 	constructor(dictionary){
 		this.dictionary = dictionary;
@@ -232,42 +224,30 @@ class LevelParser{
 	}
 	
 	obstacleFromSymbol(symbol){
-		const symbols = { 'x': 'wall', '!': 'lava' };
 		return symbols[symbol];
 	}
 	
-	createGrid(strings){
-        let self = this;
-		let array = strings.map((string) => {
-			return string.split("").map((symbol) => {
-				return self.obstacleFromSymbol(symbol);
-			})
-		});
+	createGrid(strings) {
 
-		return array;
+		return strings.map(function(string) {
+			return [...string].map(elem => symbols[elem])
+		});
 	}
 	
-	createActors(strings){
-		const array = [];
-		let index = 0;
-		
-		for(let i = 0; i < strings.length; i++ ){
-			const string = strings[i];
-			for(let position = 0; position < string.length; position++){
-				const symbol = string.charAt(position);
-				const actorCtr = this.actorFromSymbol(symbol);
-				if(typeof actorCtr === 'function'){
-					const actor = new actorCtr();
-					if(actor instanceof Actor){
-						array[index] = new actorCtr();
-						array[index].pos = new Vector(position,i);
-						index++;
+	createActors(strings) {
+		return strings.reduce((prev, string, Y) => {
+			[...string].forEach((symbol, X) => {
+				let actorCtr = this.actorFromSymbol(symbol);
+				if (actorCtr && typeof (actorCtr) === "function") {
+					let pos = new Vector(X, Y);
+					let actor = new actorCtr(pos);
+					if (actor instanceof Actor) {
+						prev.push(actor);
 					}
 				}
-			}
-		}
-		
-		return array;
+			});
+			return prev;
+		}, []);
 	}
 	
 	parse(strings){
@@ -330,8 +310,15 @@ class FireRain extends Fireball{
 }
 	
 class Coin extends Actor {
-  constructor(pos = new Vector(1, 1)) {
-    super(new Vector(pos.x + 0.2, pos.y + 0.1), new Vector(0.6, 0.6));
+  constructor(pos) {
+	  if(!pos) {
+		  pos = new Vector(0, 0);
+	  }
+	pos = pos.plus(new Vector(0.2, 0.1));
+	let size = new Vector(0.6, 0.6);
+	super(pos, size);
+	
+	this.startPos = pos;
     this.springSpeed = 8;
     this.springDist = 0.07;
     this.spring = Math.random() * Math.PI * 2;
@@ -351,8 +338,7 @@ class Coin extends Actor {
 
   getNextPosition(time = 1) {
     this.updateSpring(time);
-    const springVector = this.getSpringVector();
-    return new Vector(this.pos.x, this.pos.y + springVector.y * time);
+    return this.startPos.plus(this.getSpringVector());
   }
 
   act(time) {
@@ -361,8 +347,11 @@ class Coin extends Actor {
 }
 
 class Player extends Actor{
-	constructor(pos=new Vector(1,1)){
-		super(new Vector(pos.x, pos.y - 0.5), new Vector(0.8,1.5));	
+	constructor(pos = new Vector(1,1)) {
+		pos = pos.plus(new Vector(0, -0.5));
+		let size = new Vector(0.8, 1.5);
+		let speed = new Vector(0, 0);
+		super(pos, size, speed);	
 	}
 	
 	get type(){
