@@ -77,27 +77,26 @@ class Actor {
 			return false;
 		}
 		 
-		 return (this.pos.x <= actor.pos.x + actor.size.x && this.pos.x >= actor.pos.x && 
-		 this.pos.y <= actor.pos.y + actor.size.y && this.pos.y >= actor.pos.y) ||
-		 (this.pos.x <= actor.pos.x + actor.size.x && this.pos.x >= actor.pos.x && 
-		 this.pos.y + this.size.y <= actor.pos.y + actor.size.y && this.pos.y + this.size.y >= actor.pos.y) ||
-		 (this.pos.x + this.size.x <= actor.pos.x + actor.size.x && this.pos.x + this.size.x >= actor.pos.x && 
-		 this.pos.y <= actor.pos.y + actor.size.y && this.pos.y >= actor.pos.y) ||
-		 (this.pos.x + this.size.x <= actor.pos.x + actor.size.x && this.pos.x + this.size.x >= actor.pos.x && 
-		 this.pos.y + this.size.y <= actor.pos.y + actor.size.y && this.pos.y + this.size.y >= actor.pos.y) ||
-		 (actor.pos.x <= this.pos.x + this.size.x && actor.pos.x >= this.pos.x && 
-		 actor.pos.y <= this.pos.y + this.size.y && actor.pos.y >= this.pos.y) ||
-		 (actor.pos.x <= this.pos.x + this.size.x && actor.pos.x >= this.pos.x && 
-		 actor.pos.y + actor.size.y <= this.pos.y + this.size.y && actor.pos.y + actor.size.y >= this.pos.y) ||
-		 (actor.pos.x + actor.size.x <= this.pos.x + this.size.x && actor.pos.x + actor.size.x >= this.pos.x && 
-		 actor.pos.y <= this.pos.y + this.size.y && actor.pos.y >= this.pos.y) ||
-		 (actor.pos.x + actor.size.x <= this.pos.x + this.size.x && actor.pos.x + actor.size.x >= this.pos.x && 
-		 actor.pos.y + actor.size.y <= this.pos.y + this.size.y && actor.pos.y + actor.size.y >= this.pos.y);
+		return (this.pos.x <= actor.pos.x + actor.size.x && this.pos.x >= actor.pos.x && 
+		this.pos.y <= actor.pos.y + actor.size.y && this.pos.y >= actor.pos.y) ||
+		(this.pos.x <= actor.pos.x + actor.size.x && this.pos.x >= actor.pos.x && 
+		this.pos.y + this.size.y <= actor.pos.y + actor.size.y && this.pos.y + this.size.y >= actor.pos.y) ||
+		(this.pos.x + this.size.x <= actor.pos.x + actor.size.x && this.pos.x + this.size.x >= actor.pos.x && 
+		this.pos.y <= actor.pos.y + actor.size.y && this.pos.y >= actor.pos.y) ||
+		(this.pos.x + this.size.x <= actor.pos.x + actor.size.x && this.pos.x + this.size.x >= actor.pos.x && 
+		this.pos.y + this.size.y <= actor.pos.y + actor.size.y && this.pos.y + this.size.y >= actor.pos.y) ||
+		(actor.pos.x <= this.pos.x + this.size.x && actor.pos.x >= this.pos.x && 
+		actor.pos.y <= this.pos.y + this.size.y && actor.pos.y >= this.pos.y) ||
+		(actor.pos.x <= this.pos.x + this.size.x && actor.pos.x >= this.pos.x && 
+		actor.pos.y + actor.size.y <= this.pos.y + this.size.y && actor.pos.y + actor.size.y >= this.pos.y) ||
+		(actor.pos.x + actor.size.x <= this.pos.x + this.size.x && actor.pos.x + actor.size.x >= this.pos.x && 
+		actor.pos.y <= this.pos.y + this.size.y && actor.pos.y >= this.pos.y) ||
+		(actor.pos.x + actor.size.x <= this.pos.x + this.size.x && actor.pos.x + actor.size.x >= this.pos.x && 
+		actor.pos.y + actor.size.y <= this.pos.y + this.size.y && actor.pos.y + actor.size.y >= this.pos.y);
 	}
 }
 
 class Level {
-
 	constructor(grid = [], actors = []) {
 		this.grid = grid;
 		this.actors = actors;
@@ -106,12 +105,10 @@ class Level {
 		this.finishDelay = 1;
 	}
 
-	
 	get height() {
 		return this.grid.length;
 	}
 
-	
 	get width() {
 		return this.grid.reduce(function(prev, arr) {
 			return arr.length > prev ? arr.length : prev;
@@ -200,7 +197,6 @@ class Level {
 		}
 	}
 }
-
 
 class LevelParser {
 	constructor(dictionary) {
